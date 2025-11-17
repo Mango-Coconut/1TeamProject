@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CharacterChoicePanel1 : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 
 
@@ -11,7 +11,7 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
     public CharacterId characterId;
 
     [Header("이동 설정")]
-    public float hoverMoveY = 20f;      // 얼마나 위로 올릴지 (anchoredPosition 기준)
+    public float hoverScale = 1.1f;      // 얼마나 위로 올릴지 (anchoredPosition 기준)
     public float hoverDuration = 0.2f;  // 올라가는 시간
     public float backDuration = 0.15f;  // 내려가는 시간
     public Ease hoverEase = Ease.OutQuad;
@@ -21,7 +21,7 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
     public string stageSceneName = "Stage1";
 
     RectTransform rect;
-    Vector2 originalAnchoredPos;
+    Vector2 originalScale;
     Tween moveTween;
 
     void Awake()
@@ -33,16 +33,12 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
             return;
         }
 
-        originalAnchoredPos = rect.anchoredPosition;
+        originalScale = rect.localScale;
     }
 
     void OnDisable()
     {
         KillTween();
-        if (rect != null)
-        {
-            rect.anchoredPosition = originalAnchoredPos;
-        }
     }
 
     void KillTween()
@@ -59,10 +55,9 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
         if (rect == null) return;
 
         KillTween();
-        if(hoverMoveY == 0) return;
+        if(hoverScale == 1) return;
 
-        Vector2 targetPos = originalAnchoredPos + new Vector2(0f, hoverMoveY);
-        moveTween = rect.DOAnchorPos(targetPos, hoverDuration)
+        moveTween = rect.DOScale(hoverScale, hoverDuration)
             .SetEase(hoverEase);
     }
 
@@ -71,19 +66,13 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
         if (rect == null) return;
 
         KillTween();
-
-        moveTween = rect.DOAnchorPos(originalAnchoredPos, backDuration)
-            .SetEase(backEase);
+        moveTween = rect.DOScale(1, backDuration)
+        .SetEase(backEase);
+        
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        // 좌클릭만 받으려면 체크
-        if (eventData.button != PointerEventData.InputButton.Left) return;
-
-        OnClick();
-    }
-        public void OnClick()
+    //버튼 연결 이벤트
+    public void OnClick()
     {
         SelectedCharacter.CurCharacter = characterId;
         SceneManager.LoadScene(stageSceneName);

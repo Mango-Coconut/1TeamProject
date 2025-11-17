@@ -1,9 +1,10 @@
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class CharacterChoicePanel2 : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
 
 
@@ -17,12 +18,16 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
     public Ease hoverEase = Ease.OutQuad;
     public Ease backEase = Ease.InQuad;
 
-    [Header("이동할 씬 이름")]
+    [Header("씬 이름")]
     public string stageSceneName = "Stage1";
 
     RectTransform rect;
     Vector2 originalAnchoredPos;
     Tween moveTween;
+
+    [SerializeField] Transform selectPanel;
+    [SerializeField] TMP_Text characterNameText;
+    
 
     void Awake()
     {
@@ -34,6 +39,7 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
         }
 
         originalAnchoredPos = rect.anchoredPosition;
+        selectPanel.gameObject.SetActive(false);
     }
 
     void OnDisable()
@@ -81,11 +87,23 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
         // 좌클릭만 받으려면 체크
         if (eventData.button != PointerEventData.InputButton.Left) return;
 
-        OnClick();
+        ShowSelectPanel();
     }
-        public void OnClick()
+
+    //버튼 연결 이벤트
+    public void ShowSelectPanel()
     {
         SelectedCharacter.CurCharacter = characterId;
+        characterNameText.text = SelectedCharacter.CurCharacter.ToString();
+
+        selectPanel.gameObject.SetActive(true);
+    }
+    public void HideSelectPanel()
+    {
+        selectPanel.gameObject.SetActive(false);
+    }
+    public void OnStartButtonClick()
+    {
         SceneManager.LoadScene(stageSceneName);
     }
 }
