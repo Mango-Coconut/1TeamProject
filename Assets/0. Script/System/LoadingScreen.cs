@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class LoadingScreen : MonoBehaviour
 {
-    [SerializeField] Slider progressBar;
+    [SerializeField] ProgressBar progressBar;
     [SerializeField] float minDisplayTime = 1.0f; // 로딩이 너무 빨리 끝나도 최소 1초는 보여주기
 
     void Start()
@@ -32,10 +32,11 @@ public class LoadingScreen : MonoBehaviour
         {
             // op.progress는 0~0.9 사이까지만 올라감
             float progress = Mathf.Clamp01(op.progress / 0.9f);
+            Debug.Log($"{progress}");
 
             if (progressBar != null)
             {
-                progressBar.value = progress;
+                progressBar.SetRatio(progress);
             }
 
             // 0.9 이상이면 거의 로딩 끝

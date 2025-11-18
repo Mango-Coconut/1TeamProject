@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/9. Scenes/Stage1.unity
     guid: 83e3de9d5e3ee274f98d9501fd121e8e
+  - enabled: 1
+    path: Assets/9. Scenes/Loading.unity
+    guid: dab937189865a624dbd5f977aba9d5c6
+  - enabled: 1
+    path: Assets/9. Scenes/AI_Test.unity
+    guid: af3f8b9057be3f544b19f11d41b5df9c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

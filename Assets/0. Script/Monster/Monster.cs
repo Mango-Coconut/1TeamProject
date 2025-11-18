@@ -64,6 +64,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
     }
 
+
     public void ChangeState(EnemyStateType nextState)
     {
         currentState = nextState;

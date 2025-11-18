@@ -34,6 +34,7 @@ public class ProgressBar : MonoBehaviour
 
     void Update()
     {
+        Debug.Log(fillImage.fillAmount);
         if (!useSmooth || fillImage == null)
         {
             return;
@@ -46,5 +47,6 @@ public class ProgressBar : MonoBehaviour
 
         float newFill = Mathf.MoveTowards(fillImage.fillAmount, targetFill, smoothSpeed * Time.deltaTime);
         fillImage.fillAmount = newFill;
+        
     }
 }

@@ -34,6 +34,6 @@ public class CharacterChoiceUI : MonoBehaviour
     }
     public void OnStartButtonClick()
     {
-        SceneManager.LoadScene(stageSceneName);
+        SceneLoader.LoadScene(stageSceneName);
     }
 }
