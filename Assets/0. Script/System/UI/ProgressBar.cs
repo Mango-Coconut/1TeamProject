@@ -34,7 +34,6 @@ public class ProgressBar : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(fillImage.fillAmount);
         if (!useSmooth || fillImage == null)
         {
             return;

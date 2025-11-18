@@ -41,7 +41,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
 
         StateTimer += Time.deltaTime;
-        Debug.Log(currentState);
+        //Debug.Log(currentState);
 
         switch (currentState)
         {

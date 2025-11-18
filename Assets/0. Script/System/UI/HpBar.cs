@@ -2,37 +2,53 @@ using UnityEngine;
 
 public class HPBar : MonoBehaviour
 {
+    // HP 수동 지정시 자동 바인드. 런타임 지정시 반드시 수동 Bind 하기
     [SerializeField] HP targetHP;
-    [SerializeField] ProgressBar progressBar;
+    ProgressBar progressBar;
 
-    void OnEnable()
+    // Monster등 움직이는 객체 따라 다니게
+    public RectTransform rect;
+    public Transform anchor;
+
+    void Awake() 
     {
-        if (targetHP != null)
-        {
-            targetHP.OnHPChanged += HandleHPChanged;
-        }
-
-        // 초기 값 반영
-        if (targetHP != null && progressBar != null)
-        {
-            progressBar.SetValue(targetHP.CurrentHP, targetHP.MaxHP);
-        }
+        progressBar = GetComponent<ProgressBar>();
+        if(targetHP != null) Bind(targetHP);
     }
+
 
     void OnDisable()
     {
-        if (targetHP != null)
-        {
-            targetHP.OnHPChanged -= HandleHPChanged;
-        }
+        Clear();
+    }
+
+    public void Bind(HP hp)
+    {
+        targetHP = hp;
+        if (targetHP == null) return;
+
+        //이벤트 구독
+        targetHP.OnHPChanged += HandleHPChanged;
+        //초기값 반영
+        progressBar.SetValue(targetHP.CurrentHP, targetHP.MaxHP);
+    }
+
+    public void Bind(HP hp, Transform anchor)
+    {
+        Bind(hp);
+        this.anchor = anchor;
+    }
+
+    public void Clear(){
+        if (targetHP == null) return;
+
+        targetHP.OnHPChanged -= HandleHPChanged;
+        targetHP = null;
     }
 
     void HandleHPChanged(float current, float max)
     {
-        if (progressBar == null)
-        {
-            return;
-        }
+        if (progressBar == null) return;
 
         progressBar.SetValue(current, max);
     }

@@ -134,7 +134,7 @@ public class HP : MonoBehaviour, IDamageable
     {
         if (OnHPChanged != null)
         {
-            OnHPChanged.Invoke(currentHP, maxHP);
+            OnHPChanged?.Invoke(currentHP, maxHP);
         }
     }
 
