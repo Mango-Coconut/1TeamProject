@@ -2899,6 +2899,7 @@ GameObject:
   - component: {fileID: 1240395416}
   - component: {fileID: 1240395419}
   - component: {fileID: 1240395421}
+  - component: {fileID: 1240395423}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2991,6 +2992,7 @@ MonoBehaviour:
   jumpForce: 5
   moveSpeed: 10
   isGrounded: 1
+  isAttcking: 0
 --- !u!50 &1240395419
 Rigidbody2D:
   serializedVersion: 5
@@ -3070,6 +3072,28 @@ MonoBehaviour:
   maxHP: 100
   armor: 0
   initializeOnAwake: 1
+--- !u!95 &1240395423
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240395415}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0ac5e9f34fdfaee489a37aa34f35c6f8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1367988580
 GameObject:
   m_ObjectHideFlags: 0

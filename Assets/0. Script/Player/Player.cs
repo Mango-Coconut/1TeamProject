@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,14 +7,18 @@ public class Player : MonoBehaviour
     HP hp;
     public HP HP => hp;
     Rigidbody2D rb; // 변수 선언은 소문자로 시작. 단 rigidbody2D같은 일부 예약어는 사용 불가해서 rb로 바꿈
+    Animator anim;
     public float jumpForce = 5;
     public float moveSpeed = 10;
     public bool isGrounded = true;
+    public bool isAttcking = false;
+    public float attackCooldown = 0.5f;
 
     private void Awake()
     {
         hp = GetComponent<HP>();
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
     void Start()
     {
@@ -77,6 +82,16 @@ public class Player : MonoBehaviour
 
     void Attack()
     {
-
+        if (Input.GetKeyDown(KeyCode.A) && !isAttcking)
+        {
+            anim.SetTrigger("Attack");
+            StartCoroutine(AttackCooldownRoutine());
+        }
+    }
+    IEnumerator AttackCooldownRoutine() //코루틴
+    {
+        isAttcking = true;
+        yield return new WaitForSeconds(attackCooldown);
+        isAttcking = false;
     }
 }
