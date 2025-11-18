@@ -1,8 +1,11 @@
 using UnityEngine;
 
-public class Monster : MonoBehaviour, IEnemyStradegy
+public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 {
     public EnemyStateType currentState = EnemyStateType.Idle;
+    HP hp;
+    [SerializeField] float damage = 20f;
+    public float Damage { get { return damage; } }
 
     [SerializeField]
     float idleTime = 2f;
@@ -31,7 +34,11 @@ public class Monster : MonoBehaviour, IEnemyStradegy
 
     void Update()
     {
-        DistanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
+        if (PlayerTransform != null)
+        {
+            DistanceToPlayer = Vector3.Distance(transform.position, PlayerTransform.position);
+        }
+
 
         StateTimer += Time.deltaTime;
         Debug.Log(currentState);
@@ -65,7 +72,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy
 
     public void Idle()
     {
-        // ÀÏÁ¤ ¹üÀ§ ¾È¿¡¼­ ÀÌµ¿ -> Á¤Áö ¹Ýº¹ 
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ -> ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ 
         if (StateTimer >= idleTime)
         {
             ChangeState(EnemyStateType.Patrol);
@@ -79,7 +86,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy
 
     public void Patrol()
     {
-        // ÀÏÁ¤ ¹üÀ§ ¾È¿¡¼­ ÀÌµ¿ -> Á¤Áö ¹Ýº¹
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½È¿ï¿½ï¿½ï¿½ ï¿½Ìµï¿½ -> ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½
         transform.position += new Vector3(movedir * patrolSpeed * Time.deltaTime, 0f, 0f);
 
         if (StateTimer >= patrolTime)
@@ -96,7 +103,8 @@ public class Monster : MonoBehaviour, IEnemyStradegy
 
     public void Chase()
     {
-        // Ãß³ë
+        if(PlayerTransform == null) return;
+        // ï¿½ß³ï¿½
         Vector2 targetPos = new Vector2(PlayerTransform.position.x, transform.position.y);
 
         Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
@@ -123,13 +131,13 @@ public class Monster : MonoBehaviour, IEnemyStradegy
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // º®¿¡ Ãæµ¹ ½Ã ¹Ý´ë ¹æÇâÀ¸·Î ÀÌµ¿
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ ï¿½ï¿½ ï¿½Ý´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
         if (collision.gameObject.CompareTag("Wall"))
         {
             movedir *= -1;
         }
 
-        //// ÇÃ·¹ÀÌ¾î¿Í Ãæµ¹ ½Ã ÇÃ·¹ÀÌ¾î Ã¼·Â °¨¼Ò
+        //// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ ï¿½æµ¹ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ Ã¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         //if (collision.gameObject.CompareTag("Player"))
         //{
         //    //TempGameManager.instance.AttackDmg(CollisionDMG);

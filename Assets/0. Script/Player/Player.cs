@@ -3,23 +3,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float maxHP;
-    public float curHP;
+    HP hp;
     //public float exp;
-    public float jumpForce;
-    public float moveSpeed;
-    public Rigidbody2D Rigidbody2D;
-    private bool isGrounded = true;
-
-    public event Action<float> ChangedHP;
-    //public event Action<float> ChangedExp;
+    public float jumpForce = 5;
+    public float moveSpeed = 10;
+    Rigidbody2D Rigidbody2D;
+    public bool isGrounded = true;
 
     void Start()
     {
-        if (Rigidbody2D == null)
-        {
-            Rigidbody2D = GetComponent<Rigidbody2D>();
-        }
+        Rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -27,9 +20,18 @@ public class Player : MonoBehaviour
         Move();
     }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        isGrounded = true;
+        GameObject go = collision.gameObject;
+        if ((go.CompareTag("Ground") || go.CompareTag("Wall")) && !isGrounded)
+        {
+            isGrounded = true;
+        }
+        IAttackable attacker = collision.collider.GetComponent<IAttackable>();
+        if (attacker != null)
+        {
+            hp.TakeDamage(attacker.Damage);
+        }
     }
 
     void Move()
@@ -37,9 +39,9 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
             Rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            isGrounded = false; 
+            isGrounded = false;
         }
-                
+
         float horizontalMovement = 0f;
 
         if (Input.GetKey(KeyCode.RightArrow))
@@ -52,12 +54,4 @@ public class Player : MonoBehaviour
         }
         Rigidbody2D.linearVelocity = new Vector2(horizontalMovement * moveSpeed, Rigidbody2D.linearVelocity.y);
     }
-
-    public void ChangeHP(float value)
-    {
-        curHP += value;
-        
-        ChangedHP?.Invoke(curHP);
-    }
-
 }
