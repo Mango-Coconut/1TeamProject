@@ -10,10 +10,10 @@ public class HP : MonoBehaviour, IDamageable
     [Header("시작 시 풀피로 시작할지 여부")]
     [SerializeField] bool initializeOnAwake = true;
 
-    float currentHP;
+    float curHP;
     bool isDead;
 
-    public float CurrentHP { get { return currentHP; } }
+    public float CurHP { get { return curHP; } }
     public float MaxHP { get { return maxHP; } }
     public bool IsDead { get { return isDead; } }
 
@@ -31,7 +31,7 @@ public class HP : MonoBehaviour, IDamageable
     public void ResetHP()
     {
         isDead = false;
-        currentHP = Mathf.Max(0f, maxHP);
+        curHP = Mathf.Max(0f, maxHP);
         RaiseHPChanged();
     }
 
@@ -46,13 +46,13 @@ public class HP : MonoBehaviour, IDamageable
 
         if (fillToMax)
         {
-            currentHP = maxHP;
+            curHP = maxHP;
         }
         else
         {
-            if (currentHP > maxHP)
+            if (curHP > maxHP)
             {
-                currentHP = maxHP;
+                curHP = maxHP;
             }
         }
 
@@ -67,15 +67,15 @@ public class HP : MonoBehaviour, IDamageable
         float finalDamage = CalculateFinalDamage(amount);
         if (finalDamage <= 0f) return;
 
-        currentHP -= finalDamage;
-        if (currentHP < 0f)
+        curHP -= finalDamage;
+        if (curHP < 0f)
         {
-            currentHP = 0f;
+            curHP = 0f;
         }
 
         RaiseHPChanged();
 
-        if (currentHP <= 0f)
+        if (curHP <= 0f)
         {
             HandleDeath();
         }
@@ -86,10 +86,10 @@ public class HP : MonoBehaviour, IDamageable
         if (isDead) return;
         if (amount <= 0f) return;
 
-        currentHP += amount;
-        if (currentHP > maxHP)
+        curHP += amount;
+        if (curHP > maxHP)
         {
-            currentHP = maxHP;
+            curHP = maxHP;
         }
 
         RaiseHPChanged();
@@ -99,7 +99,7 @@ public class HP : MonoBehaviour, IDamageable
     {
         if (isDead) return;
 
-        currentHP = 0f;
+        curHP = 0f;
         RaiseHPChanged();
         HandleDeath();
     }
@@ -134,7 +134,7 @@ public class HP : MonoBehaviour, IDamageable
     {
         if (OnHPChanged != null)
         {
-            OnHPChanged?.Invoke(currentHP, maxHP);
+            OnHPChanged?.Invoke(curHP, maxHP);
         }
     }
 

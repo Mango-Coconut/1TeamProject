@@ -1,7 +1,7 @@
 using System;
 public interface IDamageable
 {
-    float CurrentHP { get; }
+    float CurHP { get; }
     float MaxHP { get; }
     bool IsDead { get; }
 
