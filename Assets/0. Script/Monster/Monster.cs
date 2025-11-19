@@ -18,6 +18,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
     float AggroDis = 6f;
     float AttackDis;
     float SkillDis = 3f;
+    float SkillPower = 10f;
 
     Vector2 PatrolDir;
 
@@ -57,8 +58,8 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
                 Chase();
                 break;
 
-            case EnemyStateType.Skill:
-                SkillA();
+            case EnemyStateType.Skill_A:
+                Skill();
                 break;
         }
 
@@ -105,7 +106,13 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
     public void Chase()
     {
         if(PlayerTransform == null) return;
-        // �߳�
+
+        if (DistanceToPlayer <= SkillDis)
+        {
+            ChangeState(EnemyStateType.Skill_A);
+        }
+
+        // 플레이어를 향해 이동
         Vector2 targetPos = new Vector2(PlayerTransform.position.x, transform.position.y);
 
         Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
@@ -118,9 +125,13 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
     }
 
-    public void SkillA()
+    public void Skill()
     {
+        Vector2 targetPos = new Vector2(PlayerTransform.position.x, transform.position.y);
 
+        Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
+
+        rb.linearVelocity = dir * SkillPower;
     }
 
     public void Dead()
