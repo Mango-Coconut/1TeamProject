@@ -2040,8 +2040,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: {fileID: 2084022848}
-  escpanel: {fileID: 1376253708}
-  settingPanel: {fileID: 17356795}
+  escpanel: {fileID: 1376253704}
+  settingPanel: {fileID: 17356791}
 --- !u!224 &571381779
 RectTransform:
   m_ObjectHideFlags: 0
