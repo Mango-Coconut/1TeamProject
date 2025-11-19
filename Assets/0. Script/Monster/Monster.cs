@@ -74,12 +74,13 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
     public void Idle()
     {
-        // ���� ���� �ȿ��� �̵� -> ���� �ݺ� 
+        // 정지 -> 순찰(이동)
         if (StateTimer >= idleTime)
         {
             ChangeState(EnemyStateType.Patrol);
         }
 
+        // 플레이어가 어그로 범위 내에 진입 할 경우 추격
         if (DistanceToPlayer <= AggroDis)
         {
             ChangeState(EnemyStateType.Chase);
@@ -88,7 +89,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
     public void Patrol()
     {
-        // ���� ���� �ȿ��� �̵� -> ���� �ݺ�
+        // 순찰( 주변 이동)
         transform.position += new Vector3(movedir * patrolSpeed * Time.deltaTime, 0f, 0f);
 
         if (StateTimer >= patrolTime)
@@ -114,9 +115,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
         // 플레이어를 향해 이동
         Vector2 targetPos = new Vector2(PlayerTransform.position.x, transform.position.y);
-
         Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
-
         rb.linearVelocity = dir * patrolSpeed;
     }
 
