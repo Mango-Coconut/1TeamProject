@@ -108,20 +108,12 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
     {
         if(PlayerTransform == null) return;
 
-<<<<<<< Updated upstream
         if (DistanceToPlayer <= SkillDis)
         {
             ChangeState(EnemyStateType.Skill_A);
         }
 
         // 플레이어를 향해 이동
-=======
-        if (DistanceToPlayer >= SkillDis)
-        {
-            ChangeState(EnemyStateType.Skill);
-        }
-
->>>>>>> Stashed changes
         Vector2 targetPos = new Vector2(PlayerTransform.position.x, transform.position.y);
         Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
         rb.linearVelocity = dir * patrolSpeed;
@@ -134,11 +126,7 @@ public class Monster : MonoBehaviour, IEnemyStradegy, IAttackable
 
     public void Skill()
     {
-<<<<<<< Updated upstream
         Vector2 targetPos = new Vector2(PlayerTransform.position.x, transform.position.y);
-=======
-        Vector2 SkillDir = new Vector2(PlayerTransform.position.x, transform.position.y);
->>>>>>> Stashed changes
 
         Vector2 dir = (targetPos - (Vector2)transform.position).normalized;
 
