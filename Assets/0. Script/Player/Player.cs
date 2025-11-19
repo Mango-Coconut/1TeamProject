@@ -6,6 +6,9 @@ public class Player : MonoBehaviour
 {
     HP hp;
     public HP HP => hp;
+    Exp exp;
+    public Exp Exp => exp;
+
     Rigidbody2D rb; // 변수 선언은 소문자로 시작. 단 rigidbody2D같은 일부 예약어는 사용 불가해서 rb로 바꿈
     Animator anim;
     public float jumpForce = 5;
@@ -17,6 +20,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         hp = GetComponent<HP>();
+        exp = GetComponent<Exp>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
@@ -27,16 +31,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        //개발자 도구
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            hp.Heal(20);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            hp.TakeDamage(20);
-        }
-
         Attack(); //함수 구현하기
         Move();
     }

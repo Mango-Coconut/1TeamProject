@@ -6,9 +6,8 @@ public class StageUI : MonoBehaviour
 {
     [SerializeField] TMP_Text characterName;
 
-
-    [SerializeField] EscPanel escpanel;
-    [SerializeField] SettingPanel settingPanel;
+    [SerializeField] GameObject escpanel;
+    [SerializeField] GameObject settingPanel;
 
     void Awake()
     {
@@ -22,7 +21,7 @@ public class StageUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             //우선 설정창 켜져있으면 닫기
-            if (settingPanel.isActiveAndEnabled)
+            if (settingPanel.activeSelf)
             {
                 HideSettingPanel();
                 return;
