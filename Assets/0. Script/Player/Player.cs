@@ -8,21 +8,19 @@ public class Player : MonoBehaviour
     public HP HP => hp;
     Exp exp;
     public Exp Exp => exp;
-
+    PlayerStats stats;
+    public PlayerStats Stats => stats;
     Rigidbody2D rb; // 변수 선언은 소문자로 시작. 단 rigidbody2D같은 일부 예약어는 사용 불가해서 rb로 바꿈
     Animator anim;
     SpriteRenderer spriter;
     public Vector2 inputVec;
-    public float jumpForce = 5;
-    public float moveSpeed = 10;
     public bool isGrounded = true;
     public bool isAttcking = false;
-    public float attackCooldown = 0.5f;
-
     private void Awake()
     {
         hp = GetComponent<HP>();
         exp = GetComponent<Exp>();
+        stats = GetComponent<PlayerStats>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
@@ -46,7 +44,7 @@ public class Player : MonoBehaviour
         IAttackable attacker = collision.collider.GetComponent<IAttackable>();
         if (attacker != null)
         {
-            hp.TakeDamage(attacker.Damage);
+            HP.TakeDamage(attacker.Damage);
         }
     }
 
@@ -54,7 +52,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rb.AddForce(Vector2.up * stats.JumpForce, ForceMode2D.Impulse);
             isGrounded = false;
         }
 
@@ -69,7 +67,7 @@ public class Player : MonoBehaviour
             horizontalMovement = -1f;
         }
         inputVec = new Vector2(horizontalMovement, Input.GetAxisRaw("Vertical"));
-        rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(horizontalMovement * stats.MoveSpeed, rb.linearVelocity.y);
     }
 
     void LateUpdate()

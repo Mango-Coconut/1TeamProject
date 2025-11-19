@@ -6,15 +6,35 @@ public class StageUI : MonoBehaviour
 {
     [SerializeField] TMP_Text characterName;
 
+    //esc 일시 정지 창
     [SerializeField] GameObject escpanel;
+
+    //esc 하위의 설정 창
     [SerializeField] GameObject settingPanel;
+
+    //레벨업 이벤트 구독 용
+    [SerializeField] Exp exp;
+    //레벨업 시 띄우기
+    [SerializeField] LevelUpPanel levelUpPanel;
 
     void Awake()
     {
+        //이벤트 구독
+        exp.LevelUpped += HandleLevelUp;
+        levelUpPanel.SelectSoulCompleted += HideLevelupPanel;
+        //기본적으로 모든 ui 닫기
         HideEscPanel();
         HideSettingPanel();
+        HideLevelupPanel();
+
         characterName.text = SelectedCharacter.CurCharacter.ToString();
     }
+    void OnDestroy()
+    {
+        exp.LevelUpped -= HandleLevelUp;
+        levelUpPanel.SelectSoulCompleted -= HideLevelupPanel;
+    }
+
 
     void Update()
     {
@@ -30,23 +50,17 @@ public class StageUI : MonoBehaviour
             //아니면 일시정지 / 풀기
             if (!PauseManager.IsPaused)
             {
-                Pause();
+                ShowEscPanel();
+                PauseManager.Pause();
             }
             else
             {
-                Resume();
+                HideEscPanel();
+                PauseManager.Resume();
             }
         }
     }
 
-    public void Pause(){
-        ShowEscPanel();
-        PauseManager.Pause();
-    }
-    public void Resume(){
-        HideEscPanel();
-        PauseManager.Resume();
-    }
     public void ShowEscPanel()
     {
         escpanel.gameObject.SetActive(true);
@@ -58,6 +72,7 @@ public class StageUI : MonoBehaviour
         HideSettingPanel();
     }
 
+    //버튼 연결 이벤트
     public void ShowSettingPanel()
     {
         settingPanel.gameObject.SetActive(true);
@@ -68,6 +83,20 @@ public class StageUI : MonoBehaviour
         settingPanel.gameObject.SetActive(false);
     }
 
+    void HandleLevelUp()
+    {
+        ShowLevelupPanel();
+    }
+    public void ShowLevelupPanel()
+    {
+        levelUpPanel.gameObject.SetActive(true);
+        PauseManager.Pause();
+    }
+    public void HideLevelupPanel()
+    {
+        levelUpPanel.gameObject.SetActive(false);
+        PauseManager.Resume();
+    }
     //버튼 연결 이벤트
     public void GoToCharacterChoiceScene()
     {

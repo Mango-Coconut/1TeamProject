@@ -16,7 +16,7 @@ public class SoulData : ScriptableObject
             return false;
 
         // 3) 중복 Soul 제한
-        if (!isStackable)//&& player.HasSoul(this)) Player에 추가하기
+        if (!isStackable && player.Stats.HasSoul(this))
             return false;
 
         return true;
@@ -49,17 +49,22 @@ public class SoulData : ScriptableObject
 
     [Header("스탯 or 스킬 강화")]
     public SoulReinforceType soulReinforceType;
+
     [Header("스탯이라면 어떤 스탯을?")]
     public CharacterStats soulReinforceStatType;
+
     [Header("얼마나 강화? (float단위)")]
     public float soulReinforceStatIncrease;
+
     [Header("스킬이라면 무슨 스킬 획득?")]
     public CharacterSkills soulReinforceSkill;
 
     [Header("캐릭터 제한")]
     public CharacterId soulCharacterType;
+
     [Header("기타 조건 제한")]
     public SoulNeedType soulNeedType;
+    
     [Header("레벨 제한일 경우 몇 제한?")]
-    public int levelConstrains;
+    public int levelConstrains = 0;
 }

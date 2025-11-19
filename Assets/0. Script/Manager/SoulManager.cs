@@ -7,6 +7,11 @@ public class SoulManager : MonoBehaviour
     [SerializeField] Player player;
     [SerializeField] List<SoulData> allSouls;  // 여기다가 SO들 전부 끌어넣기
 
+    public void EnrollSoulToPlayer(SoulData data)
+    {
+        player.Stats.EnrollSoul(data);
+    }
+
     public SoulData[] GetDoubleSoul()
     {
         List<SoulData> chosen = new List<SoulData>();
