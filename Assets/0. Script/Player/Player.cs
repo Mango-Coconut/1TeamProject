@@ -27,14 +27,8 @@ public class Player : MonoBehaviour
         anim = GetComponent<Animator>();
         spriter = GetComponent<SpriteRenderer>();
     }
-    void Start()
-    {
-
-    }
-
     void Update()
     {
-        Attack(); //함수 구현하기
         Move();
     }
 
@@ -78,26 +72,13 @@ public class Player : MonoBehaviour
         rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
     }
 
-    void Attack()
-    {
-        if (Input.GetKeyDown(KeyCode.A) && !isAttcking)
-        {
-            anim.SetTrigger("Attack");
-            StartCoroutine(AttackCooldownRoutine());
-        }
-    }
-    IEnumerator AttackCooldownRoutine() //코루틴
-    {
-        isAttcking = true;
-        yield return new WaitForSeconds(attackCooldown);
-        isAttcking = false;
-    }
-    void LateUpdate() 
+    void LateUpdate()
     {
         anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
         if (inputVec.x != 0)
         {
             spriter.flipX = inputVec.x < 0;
-        } 
+        }
     }
+
 }
