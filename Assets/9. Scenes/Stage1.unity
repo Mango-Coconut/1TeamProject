@@ -6501,11 +6501,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf701f8d195e4ef4c8c6387d011b3904, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputVec: {x: 0, y: 0}
   jumpForce: 5
   moveSpeed: 10
   isGrounded: 1
   isAttcking: 0
-  attackCooldown: 0.5
+  attackCooldown: 0.25
 --- !u!50 &1240395419
 Rigidbody2D:
   serializedVersion: 5

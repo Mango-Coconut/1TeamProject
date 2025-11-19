@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 
     Rigidbody2D rb; // 변수 선언은 소문자로 시작. 단 rigidbody2D같은 일부 예약어는 사용 불가해서 rb로 바꿈
     Animator anim;
+    SpriteRenderer spriter;
+    public Vector2 inputVec;
     public float jumpForce = 5;
     public float moveSpeed = 10;
     public bool isGrounded = true;
@@ -23,6 +25,7 @@ public class Player : MonoBehaviour
         exp = GetComponent<Exp>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
+        spriter = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
@@ -71,6 +74,7 @@ public class Player : MonoBehaviour
         {
             horizontalMovement = -1f;
         }
+        inputVec = new Vector2(horizontalMovement, Input.GetAxisRaw("Vertical"));
         rb.linearVelocity = new Vector2(horizontalMovement * moveSpeed, rb.linearVelocity.y);
     }
 
@@ -87,5 +91,13 @@ public class Player : MonoBehaviour
         isAttcking = true;
         yield return new WaitForSeconds(attackCooldown);
         isAttcking = false;
+    }
+    void LateUpdate() 
+    {
+        anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
+        if (inputVec.x != 0)
+        {
+            spriter.flipX = inputVec.x < 0;
+        } 
     }
 }
