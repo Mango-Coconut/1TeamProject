@@ -38,8 +38,8 @@ public class ExpBar : MonoBehaviour
         }
 
         // 이벤트 구독
-        targetExp.OnExpChanged += HandleExpChanged;
-        targetExp.OnLevelChanged += HandleLevelChanged;
+        targetExp.ExpChanged += HandleExpChanged;
+        targetExp.LevelChanged += HandleLevelChanged;
 
         // 초기값 반영
         HandleExpChanged(targetExp.CurExp, targetExp.CurrentLevelMaxExp);
@@ -52,8 +52,8 @@ public class ExpBar : MonoBehaviour
             return;
         }
 
-        targetExp.OnExpChanged -= HandleExpChanged;
-        targetExp.OnLevelChanged -= HandleLevelChanged;
+        targetExp.ExpChanged -= HandleExpChanged;
+        targetExp.LevelChanged -= HandleLevelChanged;
         targetExp = null;
     }
 
