@@ -3,38 +3,94 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public class SoulPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    [Header("이동 설정")]
+    public float hoverScale = 1.1f;      // 얼마나 커질지
+    public float hoverDuration = 0.2f;  // 커지는 시간
+    public float backDuration = 0.15f;  // 원복 시간
+    public Ease hoverEase = Ease.OutQuad;
+    public Ease backEase = Ease.InQuad;
+
     [SerializeField] Image soulImage;
     [SerializeField] TMP_Text soulName;
     [SerializeField] TMP_Text soulDescript;
-    SoulData myData;
+    SoulData soulData;
+    public SoulData SoulData => soulData;
 
-    public event Action<SoulData> SoulSelected;
+    public event Action<SoulPanel> SoulMouseEntered;
+    public event Action<SoulPanel> SoulMouseExited;
+    public event Action<SoulPanel> SoulMouseClicked;
+
+    RectTransform rect;
+    Vector2 originalScale;
+    Tween moveTween;
+
+    void Awake()
+    {
+        rect = GetComponent<RectTransform>();
+        originalScale = rect.localScale;
+    }
+
+    void OnDisable()
+    {
+        KillTween();
+        if (rect != null)
+        {
+            rect.localScale = originalScale;
+        }
+        soulData = null;
+    }
+    void KillTween()
+    {
+        if (moveTween != null && moveTween.IsActive())
+        {
+            moveTween.Kill();
+            moveTween = null;
+        }
+    }
+
 
     public void Set(SoulData data)
     {
         soulImage.sprite = data.soulSprite;
         soulName.text = data.soulName;
         soulDescript.text = data.soulDescript;
-        myData = data;
+        soulData = data;
+        OriginPanelScale();
     }
-    public void Clear()
+
+    public void ExpandPanelScale()
     {
-        myData = null;
+        KillTween();
+        if (hoverScale == 1) return;
+
+        moveTween = rect.DOScale(hoverScale, hoverDuration)
+            .SetEase(hoverEase)
+            .SetUpdate(true);
     }
-    public void OnPointerEnter(PointerEventData e)
+    public void OriginPanelScale()
     {
-        //애니메이션 적용
+        KillTween();
+        moveTween = rect.DOScale(1, backDuration)
+        .SetEase(backEase)
+            .SetUpdate(true);
     }
-    public void OnPointerExit(PointerEventData e)
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        //애니메이션 적용
+        SoulMouseEntered?.Invoke(this);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SoulMouseExited?.Invoke(this);
     }
 
     public void OnPointerClick(PointerEventData e)
     {
-        SoulSelected?.Invoke(myData);
+        SoulMouseClicked?.Invoke(this);
     }
 }

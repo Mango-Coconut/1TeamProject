@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class PlayerStats : MonoBehaviour
 {
 
     List<SoulData> souls = new List<SoulData>();
+    public List<SoulData> Souls => souls;
+
 
     float damage = 10;
     public float Damage => GetDamage();

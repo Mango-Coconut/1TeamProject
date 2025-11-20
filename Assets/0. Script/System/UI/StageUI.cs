@@ -14,18 +14,25 @@ public class StageUI : MonoBehaviour
 
     //레벨업 이벤트 구독 용
     [SerializeField] Exp exp;
+
     //레벨업 시 띄우기
     [SerializeField] LevelUpPanel levelUpPanel;
+
+    //보유 영성 ui
+    [SerializeField] HaveSoulsPanel haveSoulsPanel;
 
     void Awake()
     {
         //이벤트 구독
         exp.LevelUpped += HandleLevelUp;
         levelUpPanel.SelectSoulCompleted += HideLevelupPanel;
+
+        
         //기본적으로 모든 ui 닫기
         HideEscPanel();
         HideSettingPanel();
         HideLevelupPanel();
+        haveSoulsPanel.gameObject.SetActive(false);
 
         characterName.text = SelectedCharacter.CurCharacter.ToString();
     }
@@ -38,6 +45,14 @@ public class StageUI : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            haveSoulsPanel.gameObject.SetActive(true);
+        }
+        if (Input.GetKeyUp(KeyCode.Z))
+        {
+            haveSoulsPanel.gameObject.SetActive(false);
+        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             //우선 설정창 켜져있으면 닫기

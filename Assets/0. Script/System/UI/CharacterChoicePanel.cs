@@ -13,9 +13,9 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
     public CharacterId characterId;
 
     [Header("이동 설정")]
-    public float hoverScale = 1.1f;      // 얼마나 위로 올릴지 (anchoredPosition 기준)
-    public float hoverDuration = 0.2f;  // 올라가는 시간
-    public float backDuration = 0.15f;  // 내려가는 시간
+    public float hoverScale = 1.1f;      // 얼마나 커질지
+    public float hoverDuration = 0.2f;  // 커지는 시간
+    public float backDuration = 0.15f;  // 원복 시간
     public Ease hoverEase = Ease.OutQuad;
     public Ease backEase = Ease.InQuad;
 
@@ -29,12 +29,6 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
     void Awake()
     {
         rect = GetComponent<RectTransform>();
-        if (rect == null)
-        {
-            Debug.LogError("CharacterSelectButton: RectTransform이 필요합니다.", this);
-            return;
-        }
-
         originalScale = rect.localScale;
     }
 
@@ -58,8 +52,6 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (rect == null) return;
-
         KillTween();
         if(hoverScale == 1) return;
 
@@ -69,12 +61,9 @@ public class CharacterChoicePanel : MonoBehaviour, IPointerEnterHandler, IPointe
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        if (rect == null) return;
-
         KillTween();
         moveTween = rect.DOScale(1, backDuration)
         .SetEase(backEase);
-        
     }
 
     public void OnPointerClick(PointerEventData eventData)
