@@ -16,8 +16,8 @@ public class SoulData : ScriptableObject
             return false;
 
         // 3) 중복 Soul 제한
-        if (!isStackable && player.Stats.HasSoul(this))
-            return false;
+        //if (!isStackable && player.Stats.HasSoul(this))
+        //    return false;
 
         return true;
     }

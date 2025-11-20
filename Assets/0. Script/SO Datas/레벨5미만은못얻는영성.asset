@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: "\uB808\uBCA85\uBBF8\uB9CC\uC740\uBABB\uC5BB\uB294\uC601\uC131"
   m_EditorClassIdentifier: 
   soulSprite: {fileID: 0}
-  soulName: "\uD5C8\uC811"
+  soulName: "\uB8195\uC774\uC0C1 \uC804\uC6A9"
   soulDescript: "\uAC1C\uD5C8\uC811\uB828"
   isStackable: 0
   soulReinforceType: 0

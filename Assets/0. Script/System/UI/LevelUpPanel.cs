@@ -45,8 +45,24 @@ public class LevelUpPanel : MonoBehaviour
         }
 
         SoulData[] datas = soulManager.GetDoubleSoul();
-        soulPanel1.Set(datas[0]);
-        soulPanel2.Set(datas[1]);
+        
+        if(datas == null) return;
+        else if(datas.Length == 2)
+        {
+            soulPanel1.Set(datas[0]);
+            soulPanel2.Set(datas[1]);
+        }
+        else if(datas.Length == 1)
+        {
+            soulPanel1.Set(datas[0]);
+            soulPanel2.gameObject.SetActive(false);
+        }
+        else
+        {
+            soulPanel1.gameObject.SetActive(false);
+            soulPanel2.gameObject.SetActive(false);
+        }
+        Debug.Log(datas.Length);
         remainRerollNum--;
         RerollTextSet(remainRerollNum);
     }
