@@ -72,6 +72,8 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
+        if(PauseManager.IsPaused) return;
+        
         anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
         if (inputVec.x != 0)
         {
