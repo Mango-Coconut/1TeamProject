@@ -37,8 +37,9 @@ public class PlayerStats : MonoBehaviour
         return moveSpeed * (1f + bonus);
     }
         
-    float GetJumpForce(){
-        return 0;
+    float GetJumpForce()
+    {
+        return jumpForce;
     }
 
     float GetCooldown()

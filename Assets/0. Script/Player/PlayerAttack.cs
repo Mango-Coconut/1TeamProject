@@ -26,17 +26,22 @@ public class PlayerAttack : MonoBehaviour
         // 키는 방향키+A 등 조합으로 바꾸기
         if (Input.GetKeyDown(KeyCode.A) && !isAttacking)
         {
-            StartAttack(AttackType.Normal);
+           //윗 방향키 + A
+           if (Input.GetKey(KeyCode.UpArrow))
+            {
+                StartAttack(AttackType.Up);
+            }
+            //아래 방향키 + A
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                StartAttack(AttackType.Down);
+            }
+            else
+            {
+                StartAttack(AttackType.Normal);
+            }
         }
         if (Input.GetKeyDown(KeyCode.S) && !isAttacking)
-        {
-            StartAttack(AttackType.Up);
-        }
-        if (Input.GetKeyDown(KeyCode.D) && !isAttacking)
-        {
-            StartAttack(AttackType.Down);
-        }
-        if (Input.GetKeyDown(KeyCode.F) && !isAttacking)
         {
             StartAttack(AttackType.Special);
         }
