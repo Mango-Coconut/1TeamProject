@@ -2,19 +2,22 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public struct MonsterData
+public struct MonsterData  // 적 데이터
 {
-    public float IdleTime;
+    public float IdleTime; // 대기 시간
 
-    public int MoveDirection;
-    public float PatrolTime;
-    public float PatrolSpeed;
+    public int MoveDirection;   // 이동 방향 ,-1 = 왼쪽으로 이동 / 1 = 오른쪽으로 이동 
+    public float PatrolTime;    // 순찰(이동)할 시간
+    public float PatrolSpeed;   // 순찰(이동) 속도
 
-    public float AggroRange;
-    public float AttackRange;
-    public float SkillActiveRange;
-    public float SkillReadyTime;
+    public float AggroRange;    // 어그로 범위
+    public float AttackRange;   // 공격 범위
+    public float SkillActiveRange;  // 
     public float SkillPower;
+
+    public float SkillA_coolTime;
+    public float SkillB_coolTime;
+    public float SkillC_coolTime;
 }
 
 public enum MonsterStateType { Idle, Patrol, Chase, Attack, Skill, Dead }
@@ -81,6 +84,7 @@ public abstract class MonsterBase : MonoBehaviour
             case MonsterStateType.Chase: Chase(PlayerPosition); break;
             case MonsterStateType.Skill: Skill(); break;
         }
+
     }
 
     public virtual void ChangeState(MonsterStateType nextState)
@@ -103,10 +107,12 @@ public abstract class MonsterBase : MonoBehaviour
 
     public virtual void Patrol()
     {
+        transform.rotation = Quaternion.Euler(0, monsterData.MoveDirection > 0 ? 180 : 0, 0);
+
         transform.position += new Vector3(monsterData.MoveDirection * monsterData.PatrolSpeed * Time.deltaTime, 0f, 0f);
 
         if(StateTimer >= monsterData.PatrolTime)
-        {
+        { 
             monsterData.MoveDirection *= -1;
             ChangeState(MonsterStateType.Idle);
         }
@@ -123,60 +129,61 @@ public abstract class MonsterBase : MonoBehaviour
 
         Vector2 direction = (TargetPosition - (Vector2)transform.position).normalized;
 
+        //transform.rotation = Quaternion.Euler(0, direction > 0 ? 180 : 0, 0);
         transform.position = Vector2.MoveTowards(transform.position,TargetPosition,monsterData.PatrolSpeed * Time.deltaTime);
 
-        if (DistanceToPlayer > monsterData.AggroRange * 3f)
+        if (DistanceToPlayer > monsterData.AggroRange * 1.2f)
         {
             ChangeState(MonsterStateType.Idle);
         }
-        
-        if (DistanceToPlayer <= monsterData.SkillActiveRange && isSkillReady)
+
+        if(DistanceToPlayer <= monsterData.SkillActiveRange)
         {
             ChangeState(MonsterStateType.Skill);
         }
     }
 
-    public virtual void Skill()
+    protected virtual MonsterSkillType DecideSkillType()
     {
-        if (StateTimer >= monsterData.SkillReadyTime && isSkillReady)
-        {
-            if (skillCoroutine != null)
-                StopCoroutine(skillCoroutine);
+        return MonsterSkillType.None;
+    }
 
-            skillCoroutine = StartCoroutine(UsingDash());
-            ChangeState(MonsterStateType.Chase);
+    protected virtual void Skill()
+    {
+        MonsterSkillType type = DecideSkillType();
+        if(type != MonsterSkillType.None)
+        {
+            UseSkill(type);
         }
     }
 
-    protected virtual IEnumerator UsingDash()
+    protected virtual void UseSkill(MonsterSkillType skillType)
     {
-        yield break;
+        if (!isSkillReady || skillType == MonsterSkillType.None) return;
+
+        if (skillCoroutine != null) StopCoroutine(skillCoroutine);
+
+        skillCoroutine = StartCoroutine(ReadySkill(skillType));
     }
 
-    // ********* 작업중 ************
-    //protected virtual void UseSkill(MonsterSkillType skillType)
-    //{
-    //    if (!isSkillReady || skillType == MonsterSkillType.None) return;
+    protected virtual IEnumerator ReadySkill(MonsterSkillType skillType)
+    {
+        isSkillReady = false;
 
-    //    if (skillCoroutine != null) StopCoroutine(skillCoroutine);
+        switch (skillType)
+        {
+            case MonsterSkillType.Skill_A: yield return SkillA(); break;
+            case MonsterSkillType.Skill_B: yield return SkillB(); break;
+            case MonsterSkillType.Skill_C: yield return SkillC(); break;
+        }
 
-    //    skillCoroutine = StartCoroutine(SkillSelect(skillType));
-    //}
+        isSkillReady = true;
+        selectedSkill = MonsterSkillType.None;
+    }
 
-    //protected virtual IEnumerator SkillSelect(MonsterSkillType skillType)
-    //{
-    //    isSkillReady = false;
-
-    //    switch (skillType)
-    //    {
-    //        case MonsterSkillType.Skill_A: yield return SkillA(); break;
-    //        case MonsterSkillType.Skill_B: yield return SkillB(); break;
-    //        case MonsterSkillType.Skill_C: yield return SkillC(); break;
-    //    }
-
-    //    isSkillReady = true;
-    //    ChangeState(MonsterStateType.Chase);
-    //}
+    protected virtual IEnumerator SkillA() { yield break; }
+    protected virtual IEnumerator SkillB() { yield break; }
+    protected virtual IEnumerator SkillC() { yield break; }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -184,5 +191,16 @@ public abstract class MonsterBase : MonoBehaviour
         {
             monsterData.MoveDirection *= -1;
         }
+    }
+
+    void OnDrawGizmos()
+    {
+        // 어그로 범위 (빨강)
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, monsterData.AggroRange);
+
+        // 스킬 발동 범위 (파랑)
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, monsterData.SkillActiveRange);
     }
 }
