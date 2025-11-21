@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class StageUI : MonoBehaviour
 {
     [SerializeField] TMP_Text characterName;

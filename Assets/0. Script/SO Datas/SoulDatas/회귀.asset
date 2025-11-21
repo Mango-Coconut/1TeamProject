@@ -10,14 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25478d91cec221a48bf1008395afd652, type: 3}
-  m_Name: "\uC6B4\uBA85"
+  m_Name: "\uD68C\uADC0"
   m_EditorClassIdentifier: 
+  index: 1006
+  group: 1001
   soulSprite: {fileID: 0}
-  soulName: "\uC6B4\uBA85"
-  soulDescript: "\uACF5\uACA9\uB825 +10%"
-  soulReinforceType: 0
-  soulReinforceStatType: 1
-  soulReinforceStatIncrease: 20
+  displayName: "\uD68C\uADC0"
+  soulDescript: "\"CoolDown+5% \uC2A4\uD0AC\uC758 \uCFE8\uD0C0\uC784\uC774 \uAC10\uC18C\uD569\uB2C8\uB2E4.\""
+  reinforceType: 0
+  reinforceStatType: 6
+  reinforceStatPercent: 0
+  reinforceStatFlat: 0
   soulReinforceSkill: 0
   soulCharacterType: 0
   soulNeedType: 0
+  levelConstrains: 0
+  isStackable: 1
+  maxStack: 6

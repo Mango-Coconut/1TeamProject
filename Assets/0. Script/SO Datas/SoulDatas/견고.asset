@@ -10,14 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25478d91cec221a48bf1008395afd652, type: 3}
-  m_Name: "\uC7AC\uCE58"
+  m_Name: "\uACAC\uACE0"
   m_EditorClassIdentifier: 
+  index: 1008
+  group: 1001
   soulSprite: {fileID: 0}
-  soulName: "\uC7AC\uCE58"
-  soulDescript: "\uC774\uC18D +10%"
-  soulReinforceType: 0
-  soulReinforceStatType: 3
-  soulReinforceStatIncrease: 0.01
+  displayName: "\uACAC\uACE0"
+  soulDescript: "\"DEF+5% \uB354\uC6B1 \uACAC\uACE0\uD574\uC838 \uC801\uC5D0\uAC8C
+    \uBC1B\uB294 \uB370\uBBF8\uC9C0\uAC00 \uAC10\uC18C\uD569\uB2C8\uB2E4\""
+  reinforceType: 0
+  reinforceStatType: 3
+  reinforceStatPercent: 5
+  reinforceStatFlat: 0
   soulReinforceSkill: 0
   soulCharacterType: 0
   soulNeedType: 0
+  levelConstrains: 0
+  isStackable: 1
+  maxStack: 4

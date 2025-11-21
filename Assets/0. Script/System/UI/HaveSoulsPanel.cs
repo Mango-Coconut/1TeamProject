@@ -9,10 +9,17 @@ public class HaveSoulsPanel : MonoBehaviour
     [SerializeField] PlayerStats stats;
     [SerializeField] HaveSoulUI prefabHaveSoulUI;
     List<HaveSoulUI> soulUIs = new List<HaveSoulUI>();
+    
+    void Awake()
+    {
+        HideTooltipUI();
+    }
 
     void OnEnable()
     {
         HideTooltipUI();
+        Debug.Log($"havepanel");
+        
         //이름순 정렬하기
         //foreach (SoulData soul in stats.Souls.OrderBy(soul => soul.soulName)) 
         //단순 획득순 정렬
@@ -37,10 +44,21 @@ public class HaveSoulsPanel : MonoBehaviour
         HideTooltipUI();
     }
 
-    void ShowTooltipUI(Vector2 pos, SoulData data)
+    void ShowTooltipUI(RectTransform slotRect, SoulData data)
     {
+        Vector3[] corners = new Vector3[4];
+        slotRect.GetWorldCorners(corners);
+
+        Vector2 local;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            tooltipUI.rect.parent as RectTransform,
+            corners[2],
+            null,
+            out local);
+
+        tooltipUI.rect.anchoredPosition = local;
+
         tooltipUI.gameObject.SetActive(true);
-        tooltipUI.rect.anchoredPosition = pos;
         tooltipUI.Set(data);
     }
     void HideTooltipUI()

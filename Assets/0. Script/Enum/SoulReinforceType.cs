@@ -1,5 +1,5 @@
 public enum SoulReinforceType
 {
-    StatReinforce = 0,
-    SkillReinforce = 1
+    StatReinforce,
+    SkillReinforce
 }

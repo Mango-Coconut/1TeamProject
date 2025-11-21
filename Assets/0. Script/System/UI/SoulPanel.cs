@@ -56,7 +56,7 @@ public class SoulPanel : MonoBehaviour, IPointerEnterHandler, IPointerExitHandle
     public void Set(SoulData data)
     {
         soulImage.sprite = data.soulSprite;
-        soulName.text = data.soulName;
+        soulName.text = data.displayName;
         soulDescript.text = data.soulDescript;
         soulData = data;
         OriginPanelScale();

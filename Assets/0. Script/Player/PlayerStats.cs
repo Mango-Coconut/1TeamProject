@@ -1,61 +1,110 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 public class PlayerStats : MonoBehaviour
 {
-
-    List<SoulData> souls = new List<SoulData>();
-    public List<SoulData> Souls => souls;
-
-
-    float damage = 10;
-    public float Damage => GetDamage();
-    float moveSpeed = 10;
-    public float MoveSpeed => GetMoveSpeed();
-    float jumpForce = 5;
-    public float JumpForce => GetJumpForce();
-    float attackCooldown = 1f;
-    public float AttackCooldown => GetCooldown();
-
-    float GetDamage()
+    [SerializeField] SoulManager SM;
+    void Awake()
     {
-        float bonus = souls
-            .Where(s => s.soulReinforceStatType == CharacterStats.Damage)
-            .Sum(s => s.soulReinforceStatIncrease);
-
-        return damage * (1f + bonus);
+        if (SM == null) Debug.Log($"playerStats에 soulmanager 넣기");
     }
 
-    float GetMoveSpeed()
-    {
-        float bonus = souls
-            .Where(s => s.soulReinforceStatType == CharacterStats.MoveSpeed)
-            .Sum(s => s.soulReinforceStatIncrease);
+    // ===== Base Stats =====
+    float baseDamage = 10f;
+    float baseDefense = 1f;
+    float baseAttackSpeed = 1f;
+    float baseMoveSpeed = 10f;
+    float baseCooldown = 1f;
+    float baseLifeSteal = 1f;
+    float baseJumpForce = 5f;
 
-        return moveSpeed * (1f + bonus);
+    // ===== Cached Stats =====
+    float cachedDamage;
+    float cachedDefense;
+    float cachedAttackSpeed;
+    float cachedMoveSpeed;
+    float cachedCooldown;
+    float cachedLifeSteal;
+    float cachedJumpForce;
+
+    // ===== Dirty Flag =====
+    bool statDirty = true;
+
+    // ===== Public Properties =====
+    public float Damage { get { UpdateStatsIfDirty(); return cachedDamage; } }
+    public float Defense { get { UpdateStatsIfDirty(); return cachedDefense; } }
+    public float AttackSpeed { get { UpdateStatsIfDirty(); return cachedAttackSpeed; } }
+    public float MoveSpeed { get { UpdateStatsIfDirty(); return cachedMoveSpeed; } }
+    public float SkillCooldown { get { UpdateStatsIfDirty(); return cachedCooldown; } }
+    public float LifeSteal { get { UpdateStatsIfDirty(); return cachedLifeSteal; } }
+    public float JumpForce { get { UpdateStatsIfDirty(); return cachedJumpForce; } }
+
+    // =====================================
+    //              Core Logic
+    // =====================================
+
+    void UpdateStatsIfDirty()
+    {
+        if (!statDirty) return;
+        RecalculateStats();
+        statDirty = false;
     }
+
+    void RecalculateStats()
+    {
+        cachedDamage = CalcFinalStat(baseDamage, PlayerStatType.Damage);
+        cachedDefense = CalcFinalStat(baseDefense, PlayerStatType.Defense);
+        cachedAttackSpeed = CalcFinalStat(baseAttackSpeed, PlayerStatType.AttackSpeed);
+        cachedMoveSpeed = CalcFinalStat(baseMoveSpeed, PlayerStatType.MoveSpeed);
+        cachedCooldown = CalcFinalStat(baseCooldown, PlayerStatType.SkillCooldown);
+        cachedLifeSteal = CalcFinalStat(baseLifeSteal, PlayerStatType.LifeSteal);
+
+        // 점프력은 소울 영향 안 받는다고 했으므로 그대로
+        cachedJumpForce = baseJumpForce;
+    }
+
+    float CalcFinalStat(float baseStat, PlayerStatType statType)
+    {
+        if (SM == null || SM.CurSouls == null || SM.CurSouls.Count == 0)
+            return baseStat;
         
-    float GetJumpForce()
-    {
-        return jumpForce;
-    }
+        int bonusFlat = 0;
+        int bonusPercent = 0;
 
-    float GetCooldown()
-    {
-        float bonus = souls
-            .Where(s => s.soulReinforceStatType == CharacterStats.Cooldown)
-            .Sum(s => s.soulReinforceStatIncrease);
+        //모든 영성에 대해서 확인
+        for (int i = 0; i < SM.CurSouls.Count; i++)
+        {
+            SoulInstance inst = SM.CurSouls[i];
+            if (inst == null || inst.data == null || inst.data.effects == null)
+                continue;
 
-        return attackCooldown * (1f - bonus);
-    }
+            //해당 영성의 모든 효과 확인
+            SoulEffect[] effects = inst.data.effects;
 
-    public bool HasSoul(SoulData data){
-        return souls.Contains(data);
-    }
-    public void EnrollSoul(SoulData data)
-    {
-        souls.Add(data);
+            for (int j = 0; j < effects.Length; j++)
+            {
+                SoulEffect effect = effects[j];
+                if (effect == null) continue;
+
+                // 이 효과가 지금 계산 중인 스탯(statType)에 해당하는지
+                if (effect.targetStat != statType)
+                    continue;
+
+                // 스택이 있다면, 스택 수만큼 곱해줌 (없으면 1로 생각)
+                int stack = inst.stack > 0 ? inst.stack : 1;
+
+                if (effect.type == SoulEffectType.StatFlat)
+                {
+                    bonusFlat += effect.flatValue * stack;
+                }
+                else if (effect.type == SoulEffectType.StatPercent)
+                {
+                    bonusPercent += effect.percentValue * stack;
+                }
+            }
+        }
+
+        return (baseStat + bonusFlat) * (1f + bonusPercent * 0.01f);
     }
 }
