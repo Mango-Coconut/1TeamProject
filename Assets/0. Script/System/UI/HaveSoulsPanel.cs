@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class HaveSoulsPanel : MonoBehaviour
 {
     [SerializeField] HaveSoulTooltipUI tooltipUI;
-    [SerializeField] PlayerStats stats;
+    [SerializeField] SoulManager SM;
     [SerializeField] HaveSoulUI prefabHaveSoulUI;
     List<HaveSoulUI> soulUIs = new List<HaveSoulUI>();
     
@@ -18,12 +18,11 @@ public class HaveSoulsPanel : MonoBehaviour
     void OnEnable()
     {
         HideTooltipUI();
-        Debug.Log($"havepanel");
         
         //이름순 정렬하기
         //foreach (SoulData soul in stats.Souls.OrderBy(soul => soul.soulName)) 
         //단순 획득순 정렬
-        foreach (SoulData soul in stats.Souls)
+        foreach (SoulInstance soul in SM.CurSouls)
         {
             HaveSoulUI haveSoulUI = Instantiate(prefabHaveSoulUI, transform);
             haveSoulUI.MouseEntered += ShowTooltipUI;
@@ -44,7 +43,7 @@ public class HaveSoulsPanel : MonoBehaviour
         HideTooltipUI();
     }
 
-    void ShowTooltipUI(RectTransform slotRect, SoulData data)
+    void ShowTooltipUI(RectTransform slotRect, SoulInstance inst)
     {
         Vector3[] corners = new Vector3[4];
         slotRect.GetWorldCorners(corners);
@@ -59,7 +58,7 @@ public class HaveSoulsPanel : MonoBehaviour
         tooltipUI.rect.anchoredPosition = local;
 
         tooltipUI.gameObject.SetActive(true);
-        tooltipUI.Set(data);
+        tooltipUI.Set(inst.data);
     }
     void HideTooltipUI()
     {

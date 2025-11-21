@@ -9,9 +9,11 @@ public class HaveSoulUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     RectTransform rect;
     [SerializeField] Image soulImage;
     [SerializeField] TMP_Text soulName;
-    SoulData data;
+    [SerializeField] TMP_Text soulNum;
+    SoulInstance inst;
 
-    public event Action<RectTransform, SoulData> MouseEntered;
+
+    public event Action<RectTransform, SoulInstance> MouseEntered;
     public event Action MouseExited;
 
     void Awake()
@@ -19,11 +21,12 @@ public class HaveSoulUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         rect = GetComponent<RectTransform>();
     }
 
-    public void Bind(SoulData data)
+    public void Bind(SoulInstance inst)
     {
-        this.data = data;
-        soulImage.sprite = data.soulSprite;
-        soulName.text = data.displayName;
+        this.inst = inst;
+        soulImage.sprite = inst.data.soulSprite;
+        soulName.text = inst.data.displayName;
+        soulNum.SetText("{0}", inst.stack);
     }
 
     public void OnPointerEnter(PointerEventData e)
@@ -33,7 +36,7 @@ public class HaveSoulUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         //     $"pointerEnter={e.pointerEnter?.name} / " +
         //     $"currentRaycast={e.pointerCurrentRaycast.gameObject?.name}"
         // );
-        MouseEntered?.Invoke(rect, data);
+        MouseEntered?.Invoke(rect, inst);
     }
 
     public void OnPointerExit(PointerEventData e)
@@ -46,3 +49,4 @@ public class HaveSoulUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         MouseExited?.Invoke();
     }
 }
+

@@ -11,13 +11,13 @@ public class PlayerStats : MonoBehaviour
     }
 
     // ===== Base Stats =====
-    float baseDamage = 10f;
-    float baseDefense = 1f;
-    float baseAttackSpeed = 1f;
-    float baseMoveSpeed = 10f;
-    float baseCooldown = 1f;
-    float baseLifeSteal = 1f;
-    float baseJumpForce = 5f;
+    [SerializeField] float baseDamage = 10f;
+    [SerializeField] float baseDefense = 1f;
+    [SerializeField] float baseAttackSpeed = 1f;
+    [SerializeField] float baseMoveSpeed = 10f;
+    [SerializeField] float baseCooldown = 1f;
+    [SerializeField] float baseLifeSteal = 1f;
+    [SerializeField] float baseJumpForce = 5f;
 
     // ===== Cached Stats =====
     float cachedDamage;
@@ -44,6 +44,13 @@ public class PlayerStats : MonoBehaviour
     //              Core Logic
     // =====================================
 
+    //스탯이 변경되었다고 알려줌
+    public void MakeDirty()
+    {
+        statDirty = true;
+    }   
+
+    //스탯이 변경되었을 경우 업데이트 함
     void UpdateStatsIfDirty()
     {
         if (!statDirty) return;

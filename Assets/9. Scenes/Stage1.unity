@@ -2521,7 +2521,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &571937510
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2593,7 +2593,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rect: {fileID: 571937510}
-  soulName: {fileID: 0}
   soulDescript: {fileID: 944955415}
 --- !u!1 &583470932
 GameObject:
@@ -3698,14 +3697,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1240395418}
-  allSouls:
-  - {fileID: 11400000, guid: 745b3008a249c6c478c45249acd4324e, type: 2}
-  - {fileID: 11400000, guid: fec6f33e546937f40a819b98afb72962, type: 2}
-  - {fileID: 11400000, guid: 903d54892c13d124cac3211bf1df0a03, type: 2}
-  - {fileID: 11400000, guid: 8f43079660bb0f448a659d3b1edf5734, type: 2}
-  - {fileID: 11400000, guid: 0cf1255454465534f99dccafdf464b39, type: 2}
-  - {fileID: 11400000, guid: 2e406c7fd28dc90468c862128f90cceb, type: 2}
-  - {fileID: 11400000, guid: 55f9f0c7cf9a7ad4db2cf1478d917b90, type: 2}
 --- !u!4 &756024848
 Transform:
   m_ObjectHideFlags: 0
@@ -4621,7 +4612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &882590003
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4699,9 +4690,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   soulManager: {fileID: 756024847}
-  soulPanel1: {fileID: 2063904413}
-  soulPanel2: {fileID: 106732991}
+  soulPanels: []
   rerollText: {fileID: 699112575}
+  RerollNum: 2
 --- !u!1 &885045021
 GameObject:
   m_ObjectHideFlags: 0
@@ -5688,7 +5679,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1048365571
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5783,7 +5774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tooltipUI: {fileID: 571937513}
-  stats: {fileID: 1240395427}
+  SM: {fileID: 756024847}
   prefabHaveSoulUI: {fileID: 8656798247960641859, guid: faca6b4798a0c3f48b884d5c722013ca, type: 3}
 --- !u!1 &1055374881
 GameObject:
@@ -6211,7 +6202,7 @@ Transform:
   m_GameObject: {fileID: 1188299808}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.19, y: -2.23, z: 0}
+  m_LocalPosition: {x: 0.15, y: 0.37, z: 0}
   m_LocalScale: {x: 1, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7104,6 +7095,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35d9c9eb63b059646a7fbdc000aa27cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SM: {fileID: 756024847}
+  baseDamage: 10
+  baseDefense: 1
+  baseAttackSpeed: 1
+  baseMoveSpeed: 10
+  baseCooldown: 1
+  baseLifeSteal: 1
+  baseJumpForce: 5
 --- !u!1 &1254115552
 GameObject:
   m_ObjectHideFlags: 0

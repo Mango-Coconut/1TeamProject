@@ -28,11 +28,11 @@ public class SoulData : ScriptableObject
     [Header("레벨 제한일 경우 몇 제한?")]
     public int levelConstrains = 0;
 
-    [Header("중첩 가능 여부")]
-    public bool isStackable = true;
+    [Header("최대 보유 개수")]
+    public int maxStack = 1;
+    [Header("즉시 발동인지?")]
+    public bool isDisposable;
 
-    [Header("최대 중첩 개수")]
-    public int maxStack = 9999;
 
 
 

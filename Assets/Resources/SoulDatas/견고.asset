@@ -10,21 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 25478d91cec221a48bf1008395afd652, type: 3}
-  m_Name: "\uC7AC\uCE58"
+  m_Name: "\uACAC\uACE0"
   m_EditorClassIdentifier: 
-  index: 1005
+  index: 1008
   group: 1001
-  soulSprite: {fileID: 0}
-  displayName: "\uC7AC\uCE58"
-  soulDescript: "\"MS+5% \uC7AC\uCE58\uC788\uB294 \uC6C0\uC9C1\uC784\uC73C\uB85C
-    \uC774\uB3D9\uC18D\uB3C4\uAC00 \uC99D\uAC00\uD569\uB2C8\uB2E4.\""
-  reinforceType: 0
-  reinforceStatType: 5
-  reinforceStatPercent: 5
-  reinforceStatFlat: 0
-  soulReinforceSkill: 0
+  soulSprite: {fileID: 21300004, guid: a75445bb16444f14f96fdf9c734945cc, type: 3}
+  displayName: "\uACAC\uACE0"
+  soulDescript: "\"DEF+5% \uB354\uC6B1 \uACAC\uACE0\uD574\uC838 \uC801\uC5D0\uAC8C
+    \uBC1B\uB294 \uB370\uBBF8\uC9C0\uAC00 \uAC10\uC18C\uD569\uB2C8\uB2E4\""
+  effects: []
   soulCharacterType: 0
   soulNeedType: 0
   levelConstrains: 0
-  isStackable: 1
-  maxStack: 5
+  maxStack: 4
+  isDisposable: 0

@@ -2,11 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEditor.PackageManager.Requests;
 
 public class LevelUpPanel : MonoBehaviour
 {
     [SerializeField] SoulManager soulManager;
-    SoulPanel[] soulPanels;
+    [SerializeField] SoulPanel[] soulPanels;
     int selectIndex = -1;
     [SerializeField] TMP_Text rerollText;
     [SerializeField] int RerollNum = 2;
@@ -15,15 +16,14 @@ public class LevelUpPanel : MonoBehaviour
 
     public event Action SelectSoulCompleted;
 
-    void Reset()
+    void Awake()
     {
         soulPanels = GetComponentsInChildren<SoulPanel>();
     }
 
     public void Initialize()
     {
-        Reroll();
-        remainRerollNum = RerollNum;
+        remainRerollNum = RerollNum+1;
         candidates = null;
     }
 
@@ -155,7 +155,7 @@ public class LevelUpPanel : MonoBehaviour
     {
         if (selectedSoulPanel == null) return;
 
-        soulManager.EnrollSoulToPlayer(selectedSoulPanel.SoulData);
+        soulManager.EnrollSoul(selectedSoulPanel.SoulData);
         SelectSoulCompleted?.Invoke();
     }
 

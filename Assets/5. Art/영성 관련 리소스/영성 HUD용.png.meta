@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      "\uC601\uC131 HUD\uC6A9_0": -1193241744032689177
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
