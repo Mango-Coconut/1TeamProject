@@ -106,8 +106,8 @@ public class LevelUpPanel : MonoBehaviour
         remainRerollNum--;
 
         //남은 리롤 횟수에 따른 세팅
-        if (remainRerollNum == 0) rerollText.color = Color.red;
-        else rerollText.color = Color.black;
+        //if (remainRerollNum == 0) rerollText.color = Color.red;
+        //else rerollText.color = Color.white;
         rerollText.SetText("{0}", remainRerollNum);
     }
 

@@ -24,7 +24,7 @@ public class HaveSoulUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void Bind(SoulInstance inst)
     {
         this.inst = inst;
-        soulImage.sprite = inst.data.soulSprite;
+        soulImage.sprite = inst.data.soulIcon;
         soulName.text = inst.data.displayName;
         soulNum.SetText("{0}", inst.stack);
     }

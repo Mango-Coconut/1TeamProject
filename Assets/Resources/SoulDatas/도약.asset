@@ -15,6 +15,7 @@ MonoBehaviour:
   index: 1007
   group: 1008
   soulSprite: {fileID: 21300004, guid: a75445bb16444f14f96fdf9c734945cc, type: 3}
+  soulIcon: {fileID: -1193241744032689177, guid: bf111c476c1f7d7458ada2a8dd521da5, type: 3}
   displayName: "\uB3C4\uC57D"
   soulDescript: "\uB450\uBC88 \uC810\uD504\uAC00 \uAC00\uB2A5\uD574\uC9D1\uB2C8\uB2E4."
   effects: []

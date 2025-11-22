@@ -9,8 +9,10 @@ public class SoulData : ScriptableObject
     public int index;
     [Header("영성 그룹")]
     public int group;
-    [Header("영성 이미지")]
+    [Header("영성 이미지(풀버전)")]
     public Sprite soulSprite;
+    [Header("영성 이미지(아이콘)")]
+    public Sprite soulIcon;
     [Header("영성 이름")]
     public string displayName; //게임내 표기할 이름(파일이름)
     [Header("영성 설명")]
