@@ -1,3 +1,4 @@
+using System.Data.Common;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -31,10 +32,15 @@ public class PlayerAttack : MonoBehaviour
             {
                 StartAttack(AttackType.Up);
             }
-            //아래 방향키 + A
-            else if (Input.GetKey(KeyCode.DownArrow))
+            //아래 방향키 + A(점프 아래공격)
+            else if (Input.GetKey(KeyCode.DownArrow) && Input.GetKey(KeyCode.Space))
             {
                 StartAttack(AttackType.Down);
+            }
+            //스페이스 + A
+            else if (Input.GetKey(KeyCode.Space))
+            {
+                StartAttack(AttackType.Jump);
             }
             else
             {
@@ -64,7 +70,10 @@ public class PlayerAttack : MonoBehaviour
             case AttackType.Down: // 3
                 animator.SetTrigger("Attack_Down");
                 break;
-            case AttackType.Special: // 4
+            case AttackType.Jump: // 4
+                animator.SetTrigger("Attack_Jump");
+                break;
+            case AttackType.Special: // 5
                 animator.SetTrigger("Attack_Special");
                 break;
         }
@@ -115,6 +124,9 @@ public class PlayerAttack : MonoBehaviour
                 if (downHitbox != null) downHitbox.enabled = true;
                 break;
             case AttackType.Special:
+                if (specialHitbox != null) specialHitbox.enabled = true;
+                break;
+            case AttackType.Jump:
                 if (specialHitbox != null) specialHitbox.enabled = true;
                 break;
         }
