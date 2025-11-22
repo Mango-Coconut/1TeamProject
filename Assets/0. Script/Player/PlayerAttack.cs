@@ -1,3 +1,4 @@
+using System.Globalization;
 using UnityEngine;
 
 public class PlayerAttack : MonoBehaviour
@@ -11,6 +12,7 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] Collider2D upHitbox;
     [SerializeField] Collider2D downHitbox;
     [SerializeField] Collider2D specialHitbox;
+    [SerializeField] Collider2D jumpHitbox;
 
     bool isAttacking;
     AttackType currentType = AttackType.None;
@@ -35,6 +37,10 @@ public class PlayerAttack : MonoBehaviour
             else if (Input.GetKey(KeyCode.DownArrow))
             {
                 StartAttack(AttackType.Down);
+            }
+            else if (Input.GetKey(KeyCode.Space))
+            {
+                StartAttack(AttackType.Jump);
             }
             else
             {
@@ -63,6 +69,9 @@ public class PlayerAttack : MonoBehaviour
                 break;
             case AttackType.Down: // 3
                 animator.SetTrigger("Attack_Down");
+                break;
+            case AttackType.Jump:
+                animator.SetTrigger("Attack_Jump");
                 break;
             case AttackType.Special: // 4
                 animator.SetTrigger("Attack_Special");
@@ -114,6 +123,9 @@ public class PlayerAttack : MonoBehaviour
             case AttackType.Down:
                 if (downHitbox != null) downHitbox.enabled = true;
                 break;
+            case AttackType.Jump:
+                if(jumpHitbox != null) jumpHitbox.enabled = true;
+                break;
             case AttackType.Special:
                 if (specialHitbox != null) specialHitbox.enabled = true;
                 break;
@@ -126,5 +138,6 @@ public class PlayerAttack : MonoBehaviour
         if (upHitbox != null) upHitbox.enabled = false;
         if (downHitbox != null) downHitbox.enabled = false;
         if (specialHitbox != null) specialHitbox.enabled = false;
+        if (jumpHitbox != null) jumpHitbox.enabled = false;
     }
 }
