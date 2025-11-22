@@ -11,49 +11,52 @@ public struct MonsterData  // 적 데이터
     public float PatrolSpeed;   // 순찰(이동) 속도
 
     public float AggroRange;    // 어그로 범위
-    public float AttackRange;   // 공격 범위
-    public float SkillActiveRange;  // 
-    public float SkillPower;
+
+    public float SkillA_ActiveRange;
+    public float SkillB_ActiveRange;
+    public float SkillC_ActiveRange;
+
+    public float Skill_Damage;
 
     public float SkillA_coolTime;
     public float SkillB_coolTime;
     public float SkillC_coolTime;
 }
 
-public enum MonsterStateType { Idle, Patrol, Chase, Attack, Skill, Dead }
+public enum MonsterStateType { Idle, Patrol, Aggro, Skill, Take_Damage,Dead }
 public enum MonsterSkillType { None, Skill_A, Skill_B, Skill_C }
 
-public abstract class MonsterBase : MonoBehaviour
+public abstract class MonsterBase : MonoBehaviour ,IAttackable
 {
+    HP hp;
+    Player player;
+
+    public float Damage { get { return monsterData.Skill_Damage; } }
+
     public MonsterData monsterData;
     public MonsterStateType currentState = MonsterStateType.Idle;
     public MonsterSkillType selectedSkill = MonsterSkillType.None;
 
-    public float StateTimer;
+    [SerializeField]
+    LayerMask PlayerLayermask;
+    bool isPlayerDetected = false;
 
+    public float StateTimer;
     public float DistanceToPlayer; // 플레이어와 적 사이의 거리
 
     public bool isSkillReady;
-    public float SkillCoolTime;
 
     public Transform PlayerPosition; // 플레이어 현재 위치
     public Rigidbody2D rb;
+    Vector2 direction;
 
     protected Coroutine skillCoroutine;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        // 인스펙터에서 안 넣어줬으면 Tag로 자동 찾기
-        if (PlayerPosition == null)
-        {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-                PlayerPosition = player.transform;
-            else
-                Debug.LogWarning($"{name} : Player Tag를 가진 오브젝트를 찾지 못했습니다.");
-        }
+        hp = GetComponent<HP>();
+        player = GetComponent<Player>();
     }
 
     private void Start()
@@ -63,7 +66,12 @@ public abstract class MonsterBase : MonoBehaviour
 
     private void Update()
     {
-        MonsterFSM();
+        MonsterFSM();  
+    }
+
+    private void FixedUpdate()
+    {
+        DetectPlayer();
     }
 
     public abstract void MonsterDataSetting();
@@ -72,19 +80,15 @@ public abstract class MonsterBase : MonoBehaviour
     {
         StateTimer += Time.deltaTime;
 
-        if (PlayerPosition != null)
-            DistanceToPlayer = Vector2.Distance(transform.position, PlayerPosition.position);
-
         Debug.Log($"{gameObject.name} ({GetInstanceID()}) State: {currentState}");
 
         switch (currentState)
         {
             case MonsterStateType.Idle: Idle(); break;
             case MonsterStateType.Patrol: Patrol(); break;
-            case MonsterStateType.Chase: Chase(PlayerPosition); break;
+            case MonsterStateType.Aggro: Aggro(); break;
             case MonsterStateType.Skill: Skill(); break;
         }
-
     }
 
     public virtual void ChangeState(MonsterStateType nextState)
@@ -99,9 +103,10 @@ public abstract class MonsterBase : MonoBehaviour
         {
             ChangeState(MonsterStateType.Patrol);
         }
-        if (DistanceToPlayer <= monsterData.AggroRange)
+
+        if (isPlayerDetected)
         {
-            ChangeState(MonsterStateType.Chase);
+            ChangeState(MonsterStateType.Aggro);
         }
     }
 
@@ -116,30 +121,46 @@ public abstract class MonsterBase : MonoBehaviour
             monsterData.MoveDirection *= -1;
             ChangeState(MonsterStateType.Idle);
         }
-
-        if(DistanceToPlayer <= monsterData.AggroRange)
-        {
-            ChangeState(MonsterStateType.Chase);
-        }
     }
 
-    public virtual void Chase(Transform PlayerPosition)
+    public virtual void Aggro()
     {
-        Vector2 TargetPosition = new Vector2(PlayerPosition.position.x, transform.position.y);
+        transform.position += (Vector3)(direction * monsterData.PatrolSpeed * Time.deltaTime);
 
-        Vector2 direction = (TargetPosition - (Vector2)transform.position).normalized;
-
-        //transform.rotation = Quaternion.Euler(0, direction > 0 ? 180 : 0, 0);
-        transform.position = Vector2.MoveTowards(transform.position,TargetPosition,monsterData.PatrolSpeed * Time.deltaTime);
-
-        if (DistanceToPlayer > monsterData.AggroRange * 1.2f)
+        if (DistanceToPlayer >= monsterData.AggroRange * 1.2f)
         {
             ChangeState(MonsterStateType.Idle);
         }
 
-        if(DistanceToPlayer <= monsterData.SkillActiveRange)
+        if (DistanceToPlayer <= monsterData.SkillA_ActiveRange && isSkillReady)
         {
             ChangeState(MonsterStateType.Skill);
+        }
+    }
+
+    public void DetectPlayer()
+    {
+        Collider2D detectCollider = Physics2D.OverlapCircle(transform.position, monsterData.AggroRange, PlayerLayermask);
+
+        if (detectCollider != null)
+        {
+            if (detectCollider.CompareTag("Player"))
+            {
+                PlayerPosition = detectCollider.transform;
+
+                Vector2 playerPos = new Vector2(PlayerPosition.position.x, transform.position.y);
+                Vector2 myPos = new Vector2(transform.position.x, transform.position.y);
+
+                direction = (playerPos - myPos).normalized;
+
+                ChangeState(MonsterStateType.Aggro);
+
+                DistanceToPlayer = Vector2.Distance(transform.position, PlayerPosition.position);
+            }
+        }
+        else
+        {  
+            PlayerPosition = null;
         }
     }
 
@@ -185,11 +206,17 @@ public abstract class MonsterBase : MonoBehaviour
     protected virtual IEnumerator SkillB() { yield break; }
     protected virtual IEnumerator SkillC() { yield break; }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected abstract void ExitSkill();
+
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            player.HP.TakeDamage(monsterData.Skill_Damage);
+        }
         if(collision.gameObject.CompareTag("Wall"))
         {
-            monsterData.MoveDirection *= -1;
+            monsterData.MoveDirection *= -1; // 벽에 충돌하면 반대 방향으로 이동
         }
     }
 
@@ -201,6 +228,6 @@ public abstract class MonsterBase : MonoBehaviour
 
         // 스킬 발동 범위 (파랑)
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, monsterData.SkillActiveRange);
+        Gizmos.DrawWireSphere(transform.position, monsterData.SkillA_ActiveRange);
     }
 }
