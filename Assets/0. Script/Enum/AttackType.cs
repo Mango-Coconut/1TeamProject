@@ -5,5 +5,4 @@ public enum AttackType
     Up = 2,
     Down = 3,
     Special = 4,
-    Jump = 5,
 }
