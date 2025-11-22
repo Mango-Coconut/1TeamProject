@@ -11,7 +11,7 @@ public class Felmos : MonsterBase
 
         monsterData.AggroRange = 10f;
 
-        monsterData.SkillActiveRange = 10f;
+        monsterData.SkillA_ActiveRange = 10f;
         monsterData.SkillA_coolTime = 10f;
     }
 
@@ -40,17 +40,17 @@ public class Felmos : MonsterBase
 
         if(DistanceToPlayer <= monsterData.AggroRange)
         {
-            ChangeState(MonsterStateType.Chase);
+            ChangeState(MonsterStateType.Aggro);
         }
     }
 
-    public override void Chase(Transform PlayerPosition)
+    public override void Aggro()
     {
-        Vector2 TargetPosition = new Vector2(PlayerPosition.position.x, PlayerPosition.position.y);
+        //Vector2 TargetPosition = new Vector2(PlayerPosition.position.x, PlayerPosition.position.y);
 
-        Vector2 direction = (TargetPosition - (Vector2)transform.position).normalized;
+        //Vector2 direction = (TargetPosition - (Vector2)transform.position).normalized;
 
-        transform.position = Vector2.MoveTowards(transform.position, TargetPosition, monsterData.PatrolSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, PlayerPosition.transform.position, monsterData.PatrolSpeed * Time.deltaTime);
 
         if (DistanceToPlayer > monsterData.AggroRange * 1.2f)
         {
@@ -68,7 +68,7 @@ public class Felmos : MonsterBase
     {
         if (!isSkillReady) return MonsterSkillType.None;
 
-        if (DistanceToPlayer <= monsterData.SkillActiveRange && canUseSkillA) return MonsterSkillType.Skill_A;
+        if (DistanceToPlayer <= monsterData.SkillA_ActiveRange && canUseSkillA) return MonsterSkillType.Skill_A;
 
         return MonsterSkillType.None;
     }
@@ -79,10 +79,15 @@ public class Felmos : MonsterBase
 
         Instantiate(FelmosCorrosive, FirePos.position, Quaternion.identity);
 
-        ChangeState(MonsterStateType.Chase);
+        ChangeState(MonsterStateType.Aggro);
 
         yield return new WaitForSeconds(monsterData.SkillA_coolTime);
 
         canUseSkillA = true;
+    }
+
+    protected override void ExitSkill()
+    {
+        throw new System.NotImplementedException();
     }
 }
