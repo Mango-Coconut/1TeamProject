@@ -3,12 +3,14 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 using UnityEditor.PackageManager.Requests;
+using DG.Tweening;
 
 public class LevelUpPanel : MonoBehaviour
 {
     [SerializeField] SoulManager soulManager;
-    [SerializeField] SoulPanel[] soulPanels;
+    SoulPanel[] soulPanels;
     int selectIndex = -1;
+    [SerializeField] Transform rerollIcon;
     [SerializeField] TMP_Text rerollText;
     [SerializeField] int RerollNum = 2;
     int remainRerollNum;
@@ -16,9 +18,19 @@ public class LevelUpPanel : MonoBehaviour
 
     public event Action SelectSoulCompleted;
 
+    //======리롤 아이콘 테스트 용========
+    [SerializeField] float duration = 0.15f; // 눌림-복귀까지 총 시간
+    Vector3 originalScale;
+    Vector3 originalRotation;
+    //======리롤 아이콘 테스트 용========
+
     void Awake()
     {
         soulPanels = GetComponentsInChildren<SoulPanel>();
+        //======리롤 아이콘 테스트 용========
+        originalScale = rerollIcon.localScale;
+        originalRotation = rerollIcon.localEulerAngles;
+        //======리롤 아이콘 테스트 용========
     }
 
     public void Initialize()
@@ -39,6 +51,7 @@ public class LevelUpPanel : MonoBehaviour
 
     void Update()
     {
+        //좌우 방향키로 영성 선택 기능
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             if (selectIndex == -1)
@@ -109,6 +122,7 @@ public class LevelUpPanel : MonoBehaviour
         //if (remainRerollNum == 0) rerollText.color = Color.red;
         //else rerollText.color = Color.white;
         rerollText.SetText("{0}", remainRerollNum);
+        if(remainRerollNum < RerollNum) PlayRerollIconAnim();
     }
 
     //SoulPanel에 마우스 올리면 커짐
@@ -179,6 +193,30 @@ public class LevelUpPanel : MonoBehaviour
             soulPanel.SoulMouseClicked -= HandleSelectSoul;
         }
     }
+    #endregion
+
+
+    #region Dotween animation
+    //리롤 아이콘 딸깍 하는 애니메이션
+    int nowrot = 0;
+    public void PlayRerollIconAnim()
+    {
+        rerollIcon.DOKill();
+
+        Sequence seq = DOTween.Sequence().SetUpdate(true); ;
+
+        seq.Append(rerollIcon.DOScale(originalScale * 0.95f, duration * 0.6f))   // 1. 살짝 줄어듦
+            
+           .Join(rerollIcon.DORotate(new Vector3(0, 0, nowrot + -120f), duration * 0.6f) // 2. 오른쪽으로 크게 회전
+                .SetEase(Ease.OutBack));
+
+           //.Append(rerollIcon.DOScale(originalScale, duration * .4f));          // 3. 원래 크기로 복귀
+
+           //.Join(rerollIcon.DORotate(new Vector3(0, 0, nowrot + 10f), duration * 1f) // 4. 살짝 덜 돌아온 상태로 복귀
+           //     .SetEase(Ease.OutBack));
+            nowrot -= 120;
+    }
+
     #endregion
 }
 
