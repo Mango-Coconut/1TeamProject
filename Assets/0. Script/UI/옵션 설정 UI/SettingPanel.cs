@@ -13,7 +13,7 @@ using UnityEngine.SceneManagement;
 ///          (2) 아니면 CanAdjust 항목에 한해 값 조절(홀드/가속)
 /// - 슬라이더 드래그 중에는 focusLocked로 키보드 입력/포커스 변경을 막는다.
 /// </summary>
-public class SettingPanel : UIPanelBase, IPointerExitHandler
+public class SettingPanel : UIPanelBase
 {
     public enum SettingPanelMode { Ingame, MainMenu }
 
@@ -144,11 +144,31 @@ public class SettingPanel : UIPanelBase, IPointerExitHandler
 
     protected override void OnOpened()
     {
-        //기본 선택
+        SettingsManager.RevertWorkingToCommitted();
+
         currentIndex = Mathf.Clamp(GetDefaultIndex(), 0, items.Count - 1);
+
+        SyncUIFromSettings();
+        RefreshSelection();
+
         alertPanel_SettingSave?.Close();
         saveAlertPanel_GotoTitle?.Close();
         saveAlertPanel_QuitGame?.Close();
+    }
+
+    void SyncUIFromSettings()
+    {
+        foreach (var go in settingItemObjects)
+        {
+            if (go == null) continue;
+            if (!go.activeInHierarchy) continue;
+
+            if (go.TryGetComponent<SettingSliderItem>(out var slider))
+                slider.SyncFromSettings();
+
+            if (go.TryGetComponent<SettingCycleItem>(out var cycle))
+                cycle.SyncFromSettings();
+        }
     }
 
     protected override void OnClosing()
@@ -266,7 +286,8 @@ public class SettingPanel : UIPanelBase, IPointerExitHandler
         alertPanel_SettingSave.Close();
         isAskingClose = false;
 
-        Close();
+        SyncUIFromSettings();
+        RefreshSelection();
     }
 
     // setting save ConfirmPanel "아니오/취소" 버튼에 연결
@@ -276,7 +297,8 @@ public class SettingPanel : UIPanelBase, IPointerExitHandler
         alertPanel_SettingSave.Close();
         isAskingClose = false;
 
-        Close();
+        SyncUIFromSettings();
+        RefreshSelection();
     }
     #endregion
 
@@ -526,9 +548,9 @@ public class SettingPanel : UIPanelBase, IPointerExitHandler
         GameManager.Instance.QuitGame();
     }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        OnOpened();
-    }
+    // public void OnPointerExit(PointerEventData eventData)
+    // {
+    //     OnOpened();
+    // }
     #endregion
 }
